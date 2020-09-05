@@ -26,13 +26,13 @@ userSchema.pre('save',  function(next) {
      });
    });
 
-userSchema.methods.comparePassword = async (candidatePassword, callback) =>{
+userSchema.methods.comparePassword = async(candidatePassword )=>{
     try {
-        const isMatch = await bcrypt.compare( candidatePassword, this.password );
-        return callback(null, isMatch); 
+        const isMatch =  await bcrypt.compare(candidatePassword, this.password);
+        return isMatch; 
         }
     catch(err){
-        return callback(err);
+        return err;
     }
     
 

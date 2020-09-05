@@ -4,6 +4,7 @@ const config = require('../config');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const localStrategy = require('passport-local');
+const bcrypt = require('bcrypt');
 
 //localStrategy
 const localLogin = new localStrategy( { usernameField: 'email' } , async(email, password, done) => {
@@ -12,17 +13,15 @@ const localLogin = new localStrategy( { usernameField: 'email' } , async(email, 
     try{
         const user = await User.findOne( { email } );
         if(!user) return done(null, false)
-
         //compare password
                 try{
-                    const isMatch = user.comparePassword(password);
-                    if(isMatch) return done(null, user);
+                    const Match = await bcrypt.compare(password, user.password);
+                    if(Match) return done(null, user);
                     return done(null, false);
-                    }
-                    catch(err){
+                }catch(err){
                     return done(err, false);
                     }
-         
+
     }catch(err){
         return done(err, false);
     }
